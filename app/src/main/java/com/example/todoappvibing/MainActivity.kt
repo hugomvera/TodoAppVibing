@@ -1,8 +1,8 @@
 package com.example.todoappvibing
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,19 +18,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-//import com.example.todoapp.ui.theme.TodoAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-          //  TodoAppTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color.Black
-                ) {
-                    TaskListScreen()
-                //}
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = Color.Black
+            ) {
+                TaskListScreen()
             }
         }
     }
@@ -57,7 +54,9 @@ fun TaskRow(task: Task, onCheckedChange: (Boolean) -> Unit, onDelete: () -> Unit
         )
         Text(
             text = task.text,
-            modifier = Modifier.weight(1f).padding(start = 8.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 8.dp),
             style = TextStyle(
                 color = Color.White,
                 fontSize = 18.sp,
@@ -72,7 +71,7 @@ fun TaskRow(task: Task, onCheckedChange: (Boolean) -> Unit, onDelete: () -> Unit
 
 @Composable
 fun TaskListScreen() {
-    var title by remember { mutableStateOf("Laundry") }
+    var title by remember { mutableStateOf("") }
     var tasks by remember {
         mutableStateOf(
             listOf(
@@ -104,12 +103,19 @@ fun TaskListScreen() {
                     focusedTextColor = Color.White,
                     focusedBorderColor = Color.Cyan
                 ),
-                textStyle = TextStyle(color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold),
+                textStyle = TextStyle(
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                ),
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Button(onClick = {
-                tasks = tasks + Task(newTaskId++, "New Task", false)
+                if (title.isNotBlank()) {
+                    tasks = tasks + Task(newTaskId++, title, false)
+                    title = "" // clear input after adding
+                }
             }) {
                 Text("+")
             }
